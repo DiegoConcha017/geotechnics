@@ -38,9 +38,9 @@ class Geometry1D:
         pass
 
     def print_layers(self):
-        print "%-20s%10s%10s" % ("soilname","top","bottom")
+        print("%-20s%10s%10s" % ("soilname","top","bottom"))
         for layer in self._layers:
-            print "%-20s%10.2f%10.2f" % (layer.soilname, layer.top, layer.bottom)
+            print("%-20s%10.2f%10.2f" % (layer.soilname, layer.top, layer.bottom))
 
     def num_layers(self):
         return len(self._layers)
