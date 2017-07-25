@@ -18,7 +18,11 @@ class Geometry1D:
                 self._layers.append(oldlayers[i])
 
     def add_layer(self, layer1d):
-        """Add a new layer, if it is not the first layer the top of the layer is ignored and just stacked under the previous layer"""
+        """Add a new layer, if it is not the first layer the top of the layer is ignored and just stacked under the previous layer.
+
+        IN:  layer1d - Layer1D object
+        OUT: Nothing
+        """
         if self.num_layers() > 0:
             if self._soillib.get_by_name(layer1d.soilname) == None:
                 print("[ERROR] Geometry1D.add_layer: Unknown soilname %s" % layer1d.soilname)
@@ -32,7 +36,11 @@ class Geometry1D:
             self._layers.append(layer1d)
 
     def insert_layer(self, layer1d):
-        """Insert a layer anywhere, just be sure that the top and the bottom do not exceed the previous top and bottom of the entire geometry"""
+        """Insert a layer anywhere, just be sure that the top and the bottom do not exceed the previous top and bottom of the entire geometry
+
+        IN:  layer1d - Layer1D object
+        OUT: Nothing
+        """
         if self.num_layers() > 0:
             if self._soillib.get_by_name(layer1d.soilname) == None:
                 print("[ERROR] Geometry1D.insert_layer: Unknown soilname %s" % layer1d.soilname)
@@ -84,8 +92,15 @@ class Geometry1D:
         else:
             print("[ERROR] Geometry1D.insert_layer: Geometry1D does not have a first layer, initialize first with the top layer")
 
-    def delete_layer(self, index, method='topdown'):
-        """Delete a layer by index and method"""
+    def delete_layer(self, index, method='down'):
+        """Delete a layer by index and method
+
+        IN:  layer1d - Layer1D object
+             method  - down (default), higher layer gets extended to bottom of deleted layer
+                     - up, lower layer gets extended to top of deleted layer
+                     - mid, both upper and lower layer get extended to middle of deleted layer
+        OUT: Nothing
+        """
         if len(self._layers) == 1:
             print("[ERROR] Geometry1D.delete_layer: Cannot delete the last layer")
             return
@@ -96,10 +111,10 @@ class Geometry1D:
         if index == 0 or index == len(self._layers):
             del self._layers[index]
         else:
-            if method=='topdown':
+            if method=='down':
                 self._layers[index-1].bottom = self._layers[index].bottom
                 del self._layers[index]
-            elif method=='bottomup':
+            elif method=='up':
                 self._layers[index+1].top = self._layers[index].top
                 del self._layers[index]
             elif method=='mid':
@@ -107,6 +122,9 @@ class Geometry1D:
                 self._layers[index-1].bottom = mid
                 self._layers[index+1].top = mid
                 del self._layers[index]
+            else:
+                print("[ERROR] Geometry1D.delete_layer: Unknown method %s passed" % method)
+                return
 
         self._merge_layers()
 

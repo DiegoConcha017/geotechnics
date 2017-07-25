@@ -56,7 +56,7 @@ def test_geometry1d():
     #delete the 3rd layer from the top using topdown
     print("Check if we can delete the -3.0 to -4.5 zand_17 layer")
     print("We use the topdown method which should extend the layer on top to the bottom of the deleted layer")
-    g.delete_layer(2, method='topdown')
+    g.delete_layer(2, method='down')
     g.print_layers()
     assert g.num_layers()==4
     assert g._layers[1].bottom == -4.5
@@ -65,7 +65,7 @@ def test_geometry1d():
     #delete the 3rd layer from the top using bottomup
     print("Check if we can delete the -4.5 to -6.0 klei_14 layer")
     print("We use the bottomup method which should extend the lower layer to the top of the deleted layer")
-    g.delete_layer(2, method='bottomup')
+    g.delete_layer(2, method='up')
     g.print_layers()
     assert g.num_layers()==3
     assert g._layers[-1].top == -4.5
@@ -84,4 +84,19 @@ def test_geometry1d():
     g.print_layers()
     assert g.num_layers()==2
     assert g._layers[0].bottom == -3.0
+    print("--------------------------------------------------------------------------------")
+
+    #delete the top layer
+    print("Check if we can delete the top layer which does not do anything with the method")
+    g.delete_layer(0)
+    g.print_layers()
+    assert g.num_layers()==1
+    assert g._layers[0].top == -3.
+    print("--------------------------------------------------------------------------------")
+
+    #try to delete the last layer
+    print("Check if we can delete the last layer (should no be possible)")
+    g.delete_layer(0)
+    g.print_layers()
+    assert g.num_layers()==1
     print("--------------------------------------------------------------------------------")
