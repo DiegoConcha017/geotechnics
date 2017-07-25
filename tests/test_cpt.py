@@ -3,7 +3,7 @@ def test_cpt():
     cpt = gt.cpt.CPT()
     cpt.read('tests/data/a_cpt.gef')
     cpt.read('tests/data/b_cpt.gef')
-    cpt.plot()
+    #cpt.plot()
 
 if __name__=="__main__":
     test_cpt()
