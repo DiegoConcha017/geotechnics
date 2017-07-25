@@ -70,7 +70,10 @@ class Geometry1D:
                     if not layeridx_top==layeridx_bottom:
                         newlayers.append(copy.deepcopy(self._layers[i]))
                         newlayers[-1].top = layer1d.bottom
+
                 elif self._layers[i].bottom < layer1d.bottom:
+                    newlayers.append(copy.deepcopy(self._layers[i]))
+                elif self._layers[i].bottom > layer1d.top:
                     newlayers.append(copy.deepcopy(self._layers[i]))
 
             self._layers = []
@@ -81,12 +84,31 @@ class Geometry1D:
         else:
             print("[ERROR] Geometry1D.insert_layer: Geometry1D does not have a first layer, initialize first with the top layer")
 
+    def delete_layer(self, index, method='topdown'):
+        """Delete a layer by index and method"""
+        if len(self._layers) == 1:
+            print("[ERROR] Geometry1D.delete_layer: Cannot delete the last layer")
+            return
+        if index >= len(self._layers):
+            print("[ERROR] Geometry1D.delete_layer: Trying to delete a non existing layer")
+            return
 
+        if index == 0 or index == len(self._layers):
+            del self._layers[index]
+        else:
+            if method=='topdown':
+                self._layers[index-1].bottom = self._layers[index].bottom
+                del self._layers[index]
+            elif method=='bottomup':
+                self._layers[index+1].top = self._layers[index].top
+                del self._layers[index]
+            elif method=='mid':
+                mid = (self._layers[index].top + self._layers[index].bottom) / 2.
+                self._layers[index-1].bottom = mid
+                self._layers[index+1].top = mid
+                del self._layers[index]
 
-
-    def delete_layer(self, layer1d):
-        """TODO"""
-        pass
+        self._merge_layers()
 
     def from_cpt(self, cptfile, method="CUR"):
         """TODO"""
